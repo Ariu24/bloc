@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 
-import yago.m8.uf3.Atari;
 import yago.m8.uf3.model.Ball;
 import yago.m8.uf3.model.Block;
 import yago.m8.uf3.model.Paddle;
@@ -17,7 +16,7 @@ public class GameScreen implements Screen {
     Ball ball;
     Paddle paddle;
     ArrayList<Block> blocks = new ArrayList<>();
-    public GameScreen(Atari atari){
+    public GameScreen(SplashScreen atari){
         shape = new ShapeRenderer();
         ball = new Ball(150, 200, 50, 12, 5);
         paddle = new Paddle();
