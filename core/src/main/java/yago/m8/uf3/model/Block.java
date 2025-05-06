@@ -7,7 +7,7 @@ public class Block {
     int y;
     int width;
     int height;
-    boolean destroyed = false;
+    public boolean destroyed = false;
 
     public Block(int x, int y, int width, int height) {
         this.x = x;

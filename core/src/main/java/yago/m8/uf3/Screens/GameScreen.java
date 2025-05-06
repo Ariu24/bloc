@@ -6,12 +6,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
-
+import java.util.Iterator;
 import yago.m8.uf3.model.Ball;
 import yago.m8.uf3.model.Block;
 import yago.m8.uf3.model.Paddle;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen  {
     ShapeRenderer shape;
     Ball ball;
     Paddle paddle;
@@ -37,15 +37,26 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        ball.update(paddle);
+        ball.update(paddle, blocks);
         paddle.update();
+        removeDestroyedBlocks();
         shape.begin(ShapeRenderer.ShapeType.Filled);
-        ball.draw(shape);
-        paddle.draw(shape);
         for (Block block : blocks) {
             block.draw(shape);
         }
+        paddle.draw(shape);
+        ball.draw(shape);
         shape.end();
+    }
+
+    private void removeDestroyedBlocks() {
+        Iterator<Block> iterator = blocks.iterator();
+        while (iterator.hasNext()) {
+            Block block = iterator.next();
+            if (block.destroyed) {
+                iterator.remove();
+            }
+        }
     }
 
     @Override
