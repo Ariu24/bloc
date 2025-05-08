@@ -18,7 +18,7 @@ public class GameScreen implements Screen  {
     ArrayList<Block> blocks = new ArrayList<>();
     public GameScreen(SplashScreen atari){
         shape = new ShapeRenderer();
-        ball = new Ball(150, 200, 50, 12, 5);
+        ball = new Ball(1000, 250, 50, 12, 5);
         paddle = new Paddle();
         int blockWidth = 210;
         int blockHeight = 50;
