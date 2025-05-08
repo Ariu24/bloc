@@ -30,8 +30,10 @@ public class Ball {
         if ((x + size) > Gdx.graphics.getWidth() || (x - size) < 0) {
             xSpeed = -xSpeed;
         }
-        if ((y + size) > Gdx.graphics.getHeight() || (y - size) < 0) {
-            ySpeed = -ySpeed;
+        if ((y + size) > Gdx.graphics.getHeight()) {
+                ySpeed = -ySpeed;
+        } else if((y - size) < 0){
+            Gdx.app.exit();
         }
 
         // Comprobar colisión con paddle
