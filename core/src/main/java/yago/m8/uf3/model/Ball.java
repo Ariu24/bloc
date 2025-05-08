@@ -15,14 +15,15 @@ public class Ball {
     int ySpeed;
     Color color = Color.WHITE;
     Random r = new Random();
-    ShapeRenderer shape;
+    boolean esCopia;
 
-    public Ball(int x, int y, int size, int xSpeed, int ySpeed) {
+    public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
+        this.esCopia = esCopia;
     }
 
     public void update(Paddle paddle, ArrayList<Block> blocks) {
@@ -33,14 +34,14 @@ public class Ball {
         if ((x + size) > Gdx.graphics.getWidth() || (x - size) < 0) {
             xSpeed = -xSpeed;
         }
-        if ((y + size) > Gdx.graphics.getHeight() || (y - size) < 0) {
-            ySpeed = -ySpeed;
+        if ((y + size) > Gdx.graphics.getHeight()) {
+                ySpeed = -ySpeed;
+        } else if((y - size) < 0){
+            if(this.esCopia){
+                Gdx.app.exit();
+            }
         }
-
-        // Comprobar colisión con paddle
         checkPaddleCollision(paddle);
-
-        // Comprobar colisión con los bloques
         checkBlocksCollision(blocks);
     }
 
@@ -50,25 +51,22 @@ public class Ball {
         }
     }
 
-    public void checkBlocksCollision(ArrayList<Block> blocks) {
+    public boolean checkBlocksCollision(ArrayList<Block> blocks) {
         for (Block block : blocks) {
             if (!block.alomostDestroyed && collidesWithBlock(block)) {
                 block.alomostDestroyed = true;
                 ySpeed = -ySpeed;
-                break;
+                return false;
             } else if (!block.destroyed && collidesWithBlock(block) && block.alomostDestroyed) {
                 block.destroyed = true;
                 ySpeed = -ySpeed;
-                Ball ball = new Ball(1050, 250, 50, 12, 5);
-                shape = new ShapeRenderer();
-                shape.begin(ShapeRenderer.ShapeType.Filled);
-                ball.draw(shape);
-                if(r.nextInt()%2==0){
-
+                if(r.nextInt() % 2 == 0){
+                    return true;
                 }
-                break;
+                return false;
             }
         }
+        return false;
     }
 
 

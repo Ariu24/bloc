@@ -1,6 +1,7 @@
 package yago.m8.uf3.model;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 public class Paddle {
@@ -19,6 +20,7 @@ public class Paddle {
         this.x = Gdx.input.getX();
     }
     public void draw(ShapeRenderer shape) {
+        shape.setColor(Color.WHITE);
         shape.rect(x, y, 300, 50);
     }
 }
