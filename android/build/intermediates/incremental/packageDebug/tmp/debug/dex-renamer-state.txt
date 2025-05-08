@@ -1,4 +1,4 @@
-#Tue May 06 20:22:49 CEST 2025
+#Thu May 08 18:08:30 CEST 2025
 base.0=D\:\\Yago\\androidProjects\\bloc\\android\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=D\:\\Yago\\androidProjects\\bloc\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\15\\classes.dex
 base.2=D\:\\Yago\\androidProjects\\bloc\\android\\build\\intermediates\\dex\\debug\\mergeLibDexDebug\\3\\classes.dex

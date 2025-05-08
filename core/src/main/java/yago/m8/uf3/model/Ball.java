@@ -48,16 +48,19 @@ public class Ball {
     }
 
     public void checkBlocksCollision(ArrayList<Block> blocks) {
-        Iterator<Block> iterator = blocks.iterator();
-        while (iterator.hasNext()) {
-            Block block = iterator.next();
-            if (!block.destroyed && collidesWithBlock(block)) {
+        for (Block block : blocks) {
+            if (!block.alomostDestroyed && collidesWithBlock(block)) {
+                block.alomostDestroyed = true;
+                ySpeed = -ySpeed;
+                break;
+            } else if (!block.destroyed && collidesWithBlock(block) && block.alomostDestroyed) {
                 block.destroyed = true;
                 ySpeed = -ySpeed;
                 break;
             }
         }
     }
+
 
     private boolean collidesWith(Paddle paddle) {
         if ((y - size) <= (paddle.y + paddle.height) && (y + size) >= paddle.y) {
