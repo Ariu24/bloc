@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
+
 import yago.m8.uf3.model.Ball;
 import yago.m8.uf3.model.Block;
 import yago.m8.uf3.model.Paddle;
@@ -16,15 +18,20 @@ public class GameScreen implements Screen  {
     Ball ball;
     Paddle paddle;
     ArrayList<Block> blocks = new ArrayList<>();
+    Random r = new Random();
     public GameScreen(SplashScreen atari){
         shape = new ShapeRenderer();
-        ball = new Ball(1000, 250, 50, 12, 5);
+        ball = new Ball(1050, 250, 50, 12, 5);
         paddle = new Paddle();
         int blockWidth = 210;
         int blockHeight = 50;
         for (int y = Gdx.graphics.getHeight()/2; y < Gdx.graphics.getHeight(); y += blockHeight + 10) {
             for (int x = 0; x < Gdx.graphics.getWidth(); x += blockWidth + 10) {
-                blocks.add(new Block(x, y, blockWidth, blockHeight));
+                if(r.nextInt()%2==0){
+                    blocks.add(new Block(x, y, blockWidth, blockHeight,true));
+                } else {
+                    blocks.add(new Block(x, y, blockWidth, blockHeight,false));
+                }
             }
         }
     }

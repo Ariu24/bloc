@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 public class Ball {
     int x;
@@ -13,6 +14,8 @@ public class Ball {
     int xSpeed;
     int ySpeed;
     Color color = Color.WHITE;
+    Random r = new Random();
+    ShapeRenderer shape;
 
     public Ball(int x, int y, int size, int xSpeed, int ySpeed) {
         this.x = x;
@@ -48,16 +51,26 @@ public class Ball {
     }
 
     public void checkBlocksCollision(ArrayList<Block> blocks) {
-        Iterator<Block> iterator = blocks.iterator();
-        while (iterator.hasNext()) {
-            Block block = iterator.next();
-            if (!block.destroyed && collidesWithBlock(block)) {
+        for (Block block : blocks) {
+            if (!block.alomostDestroyed && collidesWithBlock(block)) {
+                block.alomostDestroyed = true;
+                ySpeed = -ySpeed;
+                break;
+            } else if (!block.destroyed && collidesWithBlock(block) && block.alomostDestroyed) {
                 block.destroyed = true;
                 ySpeed = -ySpeed;
+                Ball ball = new Ball(1050, 250, 50, 12, 5);
+                shape = new ShapeRenderer();
+                shape.begin(ShapeRenderer.ShapeType.Filled);
+                ball.draw(shape);
+                if(r.nextInt()%2==0){
+
+                }
                 break;
             }
         }
     }
+
 
     private boolean collidesWith(Paddle paddle) {
         if ((y - size) <= (paddle.y + paddle.height) && (y + size) >= paddle.y) {
