@@ -38,7 +38,7 @@ public class Ball {
         if ((y + size) > Gdx.graphics.getHeight()) {
                 ySpeed = -ySpeed;
         } else if((y - size) < 0){
-            if(this.esCopia){
+            if(!this.esCopia){
                 Gdx.app.exit();
             }
         }
