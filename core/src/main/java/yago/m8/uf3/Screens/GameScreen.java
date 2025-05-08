@@ -25,8 +25,8 @@ public class GameScreen implements Screen  {
         paddle = new Paddle();
         int blockWidth = 210;
         int blockHeight = 50;
-        for (int y = Gdx.graphics.getHeight()/2; y < Gdx.graphics.getHeight(); y += blockHeight + 10) {
-            for (int x = 0; x < Gdx.graphics.getWidth(); x += blockWidth + 10) {
+        for (int y = Gdx.graphics.getHeight()/2; y < Gdx.graphics.getHeight(); y += blockHeight + 200) {
+            for (int x = 0; x < Gdx.graphics.getWidth(); x += blockWidth + 200) {
                 if(r.nextInt()%2==0){
                     blocks.add(new Block(x, y, blockWidth, blockHeight,true));
                 } else {
@@ -48,6 +48,9 @@ public class GameScreen implements Screen  {
         paddle.update();
         removeDestroyedBlocks();
         shape.begin(ShapeRenderer.ShapeType.Filled);
+        if(blocks.isEmpty()){
+            Gdx.app.exit();
+        }
         for (Block block : blocks) {
             block.draw(shape);
         }
