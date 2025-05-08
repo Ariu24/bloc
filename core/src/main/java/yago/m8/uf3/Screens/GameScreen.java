@@ -2,6 +2,7 @@ package yago.m8.uf3.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -27,14 +28,17 @@ public class GameScreen implements Screen {
         shape = new ShapeRenderer();
         balls = new ArrayList<>();
         paddle = new Paddle();
-        balls.add(new Ball(1050, 250, 50, 12, 5, false));
+        balls.add(new Ball(1050, 250, 50, 12, 5, false, Color.WHITE));
 
         int blockWidth = 210;
         int blockHeight = 50;
         for (int y = Gdx.graphics.getHeight() / 2; y < Gdx.graphics.getHeight(); y += blockHeight + 10) {
             for (int x = 0; x < Gdx.graphics.getWidth(); x += blockWidth + 10) {
-                boolean destructible = (r.nextInt() % 2 == 0);
-                blocks.add(new Block(x, y, blockWidth, blockHeight, destructible));
+                if(r.nextInt()%2==0){
+                    blocks.add(new Block(x, y, blockWidth, blockHeight,true));
+                } else {
+                    blocks.add(new Block(x, y, blockWidth, blockHeight,false));
+                }
             }
         }
     }
@@ -52,12 +56,16 @@ public class GameScreen implements Screen {
         for (Ball ball : balls) {
             ball.update(paddle, blocks);
             if (ball.checkBlocksCollision(blocks)) {
-                newBalls.add(new Ball(1050, 250, 50, 12, 5, true));
+                newBalls.add(new Ball(1050, 250, 50, 20, 10, true, Color.VIOLET));
             }
         }
         balls.addAll(newBalls);
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
+
+        if(blocks.isEmpty()){
+            Gdx.app.exit();
+        }
 
         for (Block block : blocks) {
             block.draw(shape);

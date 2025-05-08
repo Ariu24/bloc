@@ -13,17 +13,18 @@ public class Ball {
     int size;
     int xSpeed;
     int ySpeed;
-    Color color = Color.WHITE;
+    Color color;
     Random r = new Random();
     boolean esCopia;
 
-    public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia) {
+    public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia, Color color) {
         this.x = x;
         this.y = y;
         this.size = size;
         this.xSpeed = xSpeed;
         this.ySpeed = ySpeed;
         this.esCopia = esCopia;
+        this.color = color;
     }
 
     public void update(Paddle paddle, ArrayList<Block> blocks) {
