@@ -9,14 +9,15 @@ public class Block {
     int width;
     int height;
     public boolean destroyed = false;
-    public boolean alomostDestroyed = false;
+    public boolean alomostDestroyed;
     Color color = Color.WHITE;
 
-    public Block(int x, int y, int width, int height) {
+    public Block(int x, int y, int width, int height, boolean almostDestroyed) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.alomostDestroyed = almostDestroyed;
     }
 
     public void draw(ShapeRenderer shape) {
