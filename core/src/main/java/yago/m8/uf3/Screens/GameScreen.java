@@ -2,6 +2,7 @@ package yago.m8.uf3.Screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -23,11 +24,15 @@ public class GameScreen implements Screen {
     Paddle paddle;
     ArrayList<Block> blocks = new ArrayList<>();
     Random r = new Random();
+    Music music;
 
     public GameScreen(SplashScreen atari) {
         shape = new ShapeRenderer();
         balls = new ArrayList<>();
         paddle = new Paddle();
+        music = Gdx.audio.newMusic(Gdx.files.internal("GameScreen.mp3"));
+        music.setLooping(true);
+        music.play();
         balls.add(new Ball(1050, 250, 50, 12, 5, false, Color.WHITE));
 
         int blockWidth = 210;
@@ -105,5 +110,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         shape.dispose();
+        music.dispose();
     }
 }

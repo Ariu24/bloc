@@ -1,2 +1,6 @@
+GameOver.mp3
+GameScreen.mp3
+SplashScreen.mp3
+Win.mp3
 libgdx.png
 pantallaInicial.png

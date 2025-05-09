@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +13,7 @@ public class SplashScreen implements Screen {
     private Game game;
     private Texture background;
     private SpriteBatch batch;
+    private Music music;
     public SplashScreen(Game game) {
         this.game = game;
     }
@@ -19,6 +21,9 @@ public class SplashScreen implements Screen {
     public void show() {
         background = new Texture(Gdx.files.internal("pantallaInicial.png"));
         batch = new SpriteBatch();
+        music = Gdx.audio.newMusic(Gdx.files.internal("SplashScreen.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
@@ -53,5 +58,6 @@ public class SplashScreen implements Screen {
     public void dispose() {
         background.dispose();
         batch.dispose();
+        music.dispose();
     }
 }
