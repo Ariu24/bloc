@@ -1,11 +1,16 @@
 package yago.m8.uf3.model;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Timer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
+
+import yago.m8.uf3.Screens.GameScreen;
 
 public class Ball {
     int x;
@@ -16,6 +21,7 @@ public class Ball {
     Color color;
     Random r = new Random();
     boolean esCopia;
+    Sound gameOverSound;
 
     public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia, Color color) {
         this.x = x;
@@ -25,6 +31,7 @@ public class Ball {
         this.ySpeed = ySpeed;
         this.esCopia = esCopia;
         this.color = color;
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("GameOver.mp3"));
     }
 
     public void update(Paddle paddle, ArrayList<Block> blocks) {
@@ -39,7 +46,9 @@ public class Ball {
                 ySpeed = -ySpeed;
         } else if((y - size) < 0){
             if(!this.esCopia){
-                Gdx.app.exit();
+                gameOverSound.play();
+                closeGame(3);
+                gameOverSound.dispose();
             }
         }
         checkPaddleCollision(paddle);
@@ -88,5 +97,15 @@ public class Ball {
     public void draw(ShapeRenderer shape) {
         shape.setColor(color);
         shape.circle(x, y, size);
+    }
+
+    public static void closeGame(int seconds) {
+        GameScreen.MUSIC.dispose();
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                Gdx.app.exit();
+            }
+        }, seconds);
     }
 }

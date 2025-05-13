@@ -3,6 +3,7 @@ package yago.m8.uf3.Screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -24,15 +25,17 @@ public class GameScreen implements Screen {
     Paddle paddle;
     ArrayList<Block> blocks = new ArrayList<>();
     Random r = new Random();
-    Music music;
+    public static Music MUSIC;
+    Sound winS;
 
     public GameScreen(SplashScreen atari) {
         shape = new ShapeRenderer();
         balls = new ArrayList<>();
         paddle = new Paddle();
-        music = Gdx.audio.newMusic(Gdx.files.internal("GameScreen.mp3"));
-        music.setLooping(true);
-        music.play();
+        winS = Gdx.audio.newSound(Gdx.files.internal("Win.mp3"));
+        MUSIC = Gdx.audio.newMusic(Gdx.files.internal("GameScreen.mp3"));
+        MUSIC.setLooping(true);
+        MUSIC.play();
         balls.add(new Ball(1050, 250, 50, 12, 5, false, Color.WHITE));
 
         int blockWidth = 210;
@@ -69,7 +72,9 @@ public class GameScreen implements Screen {
         shape.begin(ShapeRenderer.ShapeType.Filled);
 
         if(blocks.isEmpty()){
-            Gdx.app.exit();
+            winS.play();
+            Ball.closeGame(3);
+            winS.dispose();
         }
 
         for (Block block : blocks) {
@@ -110,6 +115,6 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         shape.dispose();
-        music.dispose();
+        MUSIC.dispose();
     }
 }
