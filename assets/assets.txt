@@ -4,3 +4,5 @@ SplashScreen.mp3
 Win.mp3
 libgdx.png
 pantallaInicial.png
+pantallagameover.png
+pantallawin.png

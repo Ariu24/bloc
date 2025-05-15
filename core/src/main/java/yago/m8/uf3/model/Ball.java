@@ -1,5 +1,6 @@
 package yago.m8.uf3.model;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -7,7 +8,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
+import yago.m8.uf3.Screens.EndScreen;
+
 public class Ball {
+    private Game game;
     int x;
     int y;
     int size;
@@ -17,7 +21,7 @@ public class Ball {
     Random r = new Random();
     boolean esCopia;
 
-    public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia, Color color) {
+    public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia, Color color, Game game) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -25,6 +29,7 @@ public class Ball {
         this.ySpeed = ySpeed;
         this.esCopia = esCopia;
         this.color = color;
+        this.game = game;
     }
 
     public void update(Paddle paddle, ArrayList<Block> blocks) {
@@ -39,7 +44,7 @@ public class Ball {
                 ySpeed = -ySpeed;
         } else if((y - size) < 0){
             if(!this.esCopia){
-                Gdx.app.exit();
+                game.setScreen(new EndScreen(game));
             }
         }
         checkPaddleCollision(paddle);
@@ -69,7 +74,6 @@ public class Ball {
         }
         return false;
     }
-
 
     private boolean collidesWith(Paddle paddle) {
         if ((y - size) <= (paddle.y + paddle.height) && (y + size) >= paddle.y) {

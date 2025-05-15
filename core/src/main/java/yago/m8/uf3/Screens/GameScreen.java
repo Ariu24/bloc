@@ -1,5 +1,6 @@
 package yago.m8.uf3.Screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
@@ -18,22 +19,21 @@ import yago.m8.uf3.model.Paddle;
 
 
 public class GameScreen implements Screen {
-
+    private Game game;
     ShapeRenderer shape;
     List<Ball> balls;
     Paddle paddle;
     ArrayList<Block> blocks = new ArrayList<>();
     Random r = new Random();
     Music music;
-
-    public GameScreen(SplashScreen atari) {
+    public GameScreen(Game game) {
         shape = new ShapeRenderer();
         balls = new ArrayList<>();
         paddle = new Paddle();
         music = Gdx.audio.newMusic(Gdx.files.internal("GameScreen.mp3"));
         music.setLooping(true);
         music.play();
-        balls.add(new Ball(1050, 250, 50, 12, 5, false, Color.WHITE));
+        balls.add(new Ball(1050, 250, 50, 12, 5, false, Color.WHITE, game));
 
         int blockWidth = 210;
         int blockHeight = 50;
@@ -46,6 +46,7 @@ public class GameScreen implements Screen {
                 }
             }
         }
+        this.game=game;
     }
 
     @Override
@@ -61,16 +62,20 @@ public class GameScreen implements Screen {
         for (Ball ball : balls) {
             ball.update(paddle, blocks);
             if (ball.checkBlocksCollision(blocks)) {
-                newBalls.add(new Ball(1050, 250, 50, 20, 10, true, Color.VIOLET));
+                newBalls.add(new Ball(1050, 250, 50, 20, 10, true, Color.VIOLET, game));
             }
         }
         balls.addAll(newBalls);
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
 
-        if(blocks.isEmpty()){
-            Gdx.app.exit();
+        if (blocks.isEmpty()) {
+            Gdx.app.postRunnable(() -> {
+                game.setScreen(new WinScreen(game));
+                dispose();
+            });
         }
+
 
         for (Block block : blocks) {
             block.draw(shape);
