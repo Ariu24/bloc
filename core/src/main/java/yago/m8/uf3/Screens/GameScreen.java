@@ -36,13 +36,14 @@ public class GameScreen implements Screen {
         MUSIC = Gdx.audio.newMusic(Gdx.files.internal("GameScreen.mp3"));
         MUSIC.setLooping(true);
         MUSIC.play();
-        balls.add(new Ball(1050, 250, 50, 12, 5, false, Color.WHITE));
+        // Velocidad reducida para evitar que la pelota atraviese bloques
+        balls.add(new Ball(1050, 250, 50, 8, 5, false, Color.WHITE));
 
         int blockWidth = 210;
         int blockHeight = 50;
         for (int y = Gdx.graphics.getHeight() / 2; y < Gdx.graphics.getHeight(); y += blockHeight + 10) {
             for (int x = 0; x < Gdx.graphics.getWidth(); x += blockWidth + 10) {
-                if(r.nextInt()%2==0){
+                if(r.nextInt() % 2 == 0){  // Método más claro para probabilidad
                     blocks.add(new Block(x, y, blockWidth, blockHeight,true));
                 } else {
                     blocks.add(new Block(x, y, blockWidth, blockHeight,false));
@@ -60,22 +61,33 @@ public class GameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         paddle.update();
         removeDestroyedBlocks();
+
+        // Actualizar todas las pelotas y verificar powerups
         List<Ball> newBalls = new ArrayList<>();
         for (Ball ball : balls) {
+            // Actualizar la pelota primero
             ball.update(paddle, blocks);
+            // Verificar si debemos crear una nueva pelota después de la actualización
+            // Llamar al método original que devuelve true cuando se debe crear un powerup
             if (ball.checkBlocksCollision(blocks)) {
-                newBalls.add(new Ball(1050, 250, 50, 20, 10, true, Color.VIOLET));
+                // Crear una nueva pelota con velocidad más baja que la original
+                Ball newBall = new Ball(ball.x, ball.y, 50, 8, 6, true, Color.VIOLET);
+                newBalls.add(newBall);
+                System.out.println("¡Creando nueva pelota rosa!"); // Para debugging
             }
         }
+
+        // Añadir las nuevas pelotas a la lista
         balls.addAll(newBalls);
 
         shape.begin(ShapeRenderer.ShapeType.Filled);
-
+        // Comprobar si se ha ganado
         if(blocks.isEmpty()){
             winS.play();
             Ball.closeGame(3);
             winS.dispose();
         }
+
 
         for (Block block : blocks) {
             block.draw(shape);
@@ -116,5 +128,6 @@ public class GameScreen implements Screen {
     public void dispose() {
         shape.dispose();
         MUSIC.dispose();
+        winS.dispose();
     }
 }
