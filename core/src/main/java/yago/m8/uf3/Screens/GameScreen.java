@@ -4,6 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -25,15 +26,19 @@ public class GameScreen implements Screen {
     Paddle paddle;
     ArrayList<Block> blocks = new ArrayList<>();
     Random r = new Random();
-    Music music;
+    public static Music MUSIC;
+    Sound winS;
+
     public GameScreen(Game game) {
         shape = new ShapeRenderer();
         balls = new ArrayList<>();
         paddle = new Paddle();
-        music = Gdx.audio.newMusic(Gdx.files.internal("GameScreen.mp3"));
-        music.setLooping(true);
-        music.play();
-        balls.add(new Ball(1050, 250, 50, 12, 5, false, Color.WHITE, game));
+        winS = Gdx.audio.newSound(Gdx.files.internal("Win.mp3"));
+        MUSIC = Gdx.audio.newMusic(Gdx.files.internal("GameScreen.mp3"));
+        MUSIC.setLooping(true);
+        MUSIC.play();
+        // Velocidad reducida para evitar que la pelota atraviese bloques
+        balls.add(new Ball(1050, 250, 50, 8, 5, false, Color.WHITE));
 
         int blockWidth = 210;
         int blockHeight = 50;
@@ -46,7 +51,7 @@ public class GameScreen implements Screen {
                 }
             }
         }
-        this.game=game;
+        this.game = game;
     }
 
     @Override
@@ -62,7 +67,8 @@ public class GameScreen implements Screen {
         for (Ball ball : balls) {
             ball.update(paddle, blocks);
             if (ball.checkBlocksCollision(blocks)) {
-                newBalls.add(new Ball(1050, 250, 50, 20, 10, true, Color.VIOLET, game));
+                Ball newBall = new Ball(ball.x, ball.y, 50, 8, 6, true, Color.VIOLET);
+                newBalls.add(newBall);
             }
         }
         balls.addAll(newBalls);
@@ -71,11 +77,11 @@ public class GameScreen implements Screen {
 
         if (blocks.isEmpty()) {
             Gdx.app.postRunnable(() -> {
+                winS.play();
                 game.setScreen(new WinScreen(game));
                 dispose();
             });
         }
-
 
         for (Block block : blocks) {
             block.draw(shape);
@@ -115,6 +121,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         shape.dispose();
-        music.dispose();
+        MUSIC.dispose();
+        winS.dispose();
     }
 }

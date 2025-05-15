@@ -1,27 +1,29 @@
 package yago.m8.uf3.model;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.Timer;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Random;
 
-import yago.m8.uf3.Screens.EndScreen;
+import yago.m8.uf3.Screens.GameScreen;
 
 public class Ball {
-    private Game game;
-    int x;
-    int y;
+    public int x;
+    public int y;
     int size;
     int xSpeed;
     int ySpeed;
     Color color;
     Random r = new Random();
     boolean esCopia;
+    Sound gameOverSound;
 
-    public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia, Color color, Game game) {
+    public Ball(int x, int y, int size, int xSpeed, int ySpeed, boolean esCopia, Color color) {
         this.x = x;
         this.y = y;
         this.size = size;
@@ -29,50 +31,58 @@ public class Ball {
         this.ySpeed = ySpeed;
         this.esCopia = esCopia;
         this.color = color;
-        this.game = game;
+        gameOverSound = Gdx.audio.newSound(Gdx.files.internal("GameOver.mp3"));
     }
 
     public void update(Paddle paddle, ArrayList<Block> blocks) {
         x += xSpeed;
-        y += ySpeed;
-
-        // Colisión con bordes de la pantalla
         if ((x + size) > Gdx.graphics.getWidth() || (x - size) < 0) {
             xSpeed = -xSpeed;
+            x += xSpeed;
         }
+        y += ySpeed;
         if ((y + size) > Gdx.graphics.getHeight()) {
-                ySpeed = -ySpeed;
+            ySpeed = -ySpeed;
+            y += ySpeed;
         } else if((y - size) < 0){
             if(!this.esCopia){
-                game.setScreen(new EndScreen(game));
+                gameOverSound.play();
+                closeGame(3);
+                gameOverSound.dispose();
             }
         }
         checkPaddleCollision(paddle);
-        checkBlocksCollision(blocks);
     }
 
     public void checkPaddleCollision(Paddle paddle) {
         if(collidesWith(paddle)){
-            ySpeed = Math.abs(ySpeed);
+            if (ySpeed < 0) {
+                ySpeed = -ySpeed;
+                y = paddle.y + paddle.height + size;
+            }
         }
     }
 
+
     public boolean checkBlocksCollision(ArrayList<Block> blocks) {
+        boolean createPowerUp = false;
+
         for (Block block : blocks) {
-            if (!block.alomostDestroyed && collidesWithBlock(block)) {
-                block.alomostDestroyed = true;
-                ySpeed = -ySpeed;
-                return false;
-            } else if (!block.destroyed && collidesWithBlock(block) && block.alomostDestroyed) {
-                block.destroyed = true;
-                ySpeed = -ySpeed;
-                if(r.nextInt() % 2 == 0){
-                    return true;
+            if (!block.destroyed && collidesWithBlock(block)) {
+                if (!block.alomostDestroyed) {
+                    block.alomostDestroyed = true;
+                    ySpeed = -ySpeed;
+                } else {
+                    block.destroyed = true;
+                    ySpeed = -ySpeed;
+                    if (r.nextInt(100) < 50) {
+                        createPowerUp = true;
+                    }
                 }
-                return false;
+                return createPowerUp;
             }
         }
-        return false;
+        return createPowerUp;
     }
 
     private boolean collidesWith(Paddle paddle) {
@@ -92,5 +102,15 @@ public class Ball {
     public void draw(ShapeRenderer shape) {
         shape.setColor(color);
         shape.circle(x, y, size);
+    }
+
+    public static void closeGame(int seconds) {
+        GameScreen.MUSIC.dispose();
+        Timer.schedule(new Timer.Task() {
+            @Override
+            public void run() {
+                Gdx.app.exit();
+            }
+        }, seconds);
     }
 }
